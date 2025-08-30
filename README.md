@@ -36,32 +36,40 @@ Este projeto implementa um sistema **cliente-servidor TCP em Python** com comuni
 
 ---
 
-## ▶️ Como Executar
+# ▶️ Como Executar
 
-### 1️⃣ Rodar o Servidor
+A seguir, o passo a passo para iniciar o servidor e o cliente, realizar a troca de chaves e visualizar a comunicação cifrada.
+
+---
+
+## 🖥️ 1. Iniciar o Servidor
+
+Execute o seguinte comando no terminal:
 
 python SimpleTCPServer.py
 
-TCP Server rodando...
-Conexão de: ('127.0.0.1', <porta>)
-Número primo escolhido para p: <p>
-Base pública g: <g>
-Chave secreta compartilhada: <chave>
+### saída será semelhante a esta:
 
-### 2️⃣ Rodar o Cliente
+TCP Server rodando...
+Conexão de: ('127.0.0.1', 52751)
+Parâmetros usados -> p=4057, g=5
+Chave secreta compartilhada: 6
+Recebido do Client (decifrado): Ola Mundo!
+Enviado de volta (cifrado): URG SATJU!
+
+## 💬 2. Iniciar o Cliente
+Em outro terminal, execute:
 
 python SimpleTCPClient.py
 
-#### Exemplo de entrada:
+### Você será solicitado a inserir uma frase em letras minúsculas. Exemplo:
 
-Input lowercase sentence: teste de comunicação
+Input lowercase sentence: Ola Mundo!
 
-#### Saída esperada:
-
-Número primo escolhido para p: <p>
-Base pública g: <g>
-Chave secreta compartilhada: <chave>
-Recebido do servidor (decifrado): TESTE DE COMUNICAÇÃO
+Parâmetros usados -> p=4057, g=5
+Chave secreta compartilhada: 6
+Digite a mensagem para o servidor: Ola Mundo!
+Resposta do servidor (decifrada): OLA MUNDO!
 
 # ⚡ Funcionamento Interno
 ### 🔢 1. Escolha de Primo e Base Pública
@@ -97,44 +105,44 @@ Observe as mensagens cifradas
 Compare com o terminal do servidor (mensagem decifrada)
 
 
-# 🔍 Módulo primo.py
-primo_slow(N): verifica todos os divisores
+# 🔍 Módulo `primo.py`
 
-primo_fast(N): verifica até a raiz quadrada de N
+Este módulo é responsável por testar se um número é primo, essencial para gerar o valor público `p` utilizado no protocolo Diffie-Hellman.
 
-Ambos usados para gerar p no Diffie-Hellman
+### 🧪 Como usar
 
-⚙️ Configurações Possíveis
-🔧 Alterar intervalo de primos:
+Para realizar o teste de primalidade:
 
-p = escolher_primo(1000, 5000)
+## python primo.py
 
-g = 5
+Depois de executar, você poderá inserir um número e verificar se ele é primo usando dois métodos:
+
+primo_slow(N) → Verifica todos os divisores possíveis (método mais lento)
+
+primo_fast(N) → Verifica até a raiz quadrada de N (método otimizado)
+
+Ambos são utilizados internamente para garantir que o número p seja realmente primo antes de iniciar a troca de chaves.
 
 
-### 🔧 Alterar função de cifragem:
-Implemente outro algoritmo próprio, mantendo Diffie-Hellman para troca de chave.
+# 🧪 Demonstração com Wireshark
+Para visualizar a comunicação cifrada e decifrada em tempo real:
 
-💡 Observações
-Funciona em uma máquina (localhost) ou em duas na mesma rede
+Inicie a captura no Wireshark (interface localhost ou rede local)
 
-Todas as mensagens são cifradas e seguras
+### Rode o servidor:
 
-Ideal para demonstrações com terminal e Wireshark
+python SimpleTCPServer.py
 
-### 🧪 Demonstração
-Inicie captura no Wireshark
+### Rode o cliente:
 
-Rode o servidor SimpleTCPServer.py
+python SimpleTCPClient.py
 
-Rode o cliente SimpleTCPClient.py
+## Envie uma mensagem pelo cliente
 
-Envie uma mensagem
+Observe os seguintes pontos:
 
-# Mostre:
+📡 Mensagem cifrada visível no Wireshark (via filtro tcp.port == 1300)
 
-##### 📡 Mensagem cifrada no Wireshark
+🔓 Mensagem decifrada exibida no terminal do servidor
 
-##### 🔓 Mensagem decifrada no terminal do servidor
-
-##### 🔁 Mensagem processada (maiúsculas) de volta para o cliente
+🔁 Mensagem processada (convertida para maiúsculas) retornada ao cliente
